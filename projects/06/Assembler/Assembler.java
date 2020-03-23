@@ -6,13 +6,14 @@ import java.io.IOException;
 public class Assembler {
 
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
 		String fileName = args[0];
 		Parser ps = new Parser(fileName);
 
 		ps.firstRound();
+		System.out.println("First Round");
 		
 		String output = ps.secondRound();
+		System.out.println("Second Round");
 		
 		String filepath = "../" + fileName + ".hack";
 		

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Parser {
 	public final ArrayList<String> instructions = new ArrayList<String>();
 	public SymbolTable table;
+	public Code code = new Code();
 	public int current = 0;
 	public int pc = -1;
 	
@@ -28,6 +29,7 @@ public class Parser {
 	}
 	
 	public String secondRound() throws Exception {
+		current = 0;
 		return advance(false);
 	}
 	
@@ -90,6 +92,7 @@ public class Parser {
 					
 			}
 			current++;
+			System.out.println("output:" + output);
 		}
 		return output;
 	}
@@ -117,20 +120,18 @@ public class Parser {
 	
 	public String dest(String command) {
 		// returns the dest mnemonic
-		Code.dest(command);
-		return null;
+		return code.dest(command);
+	
 	}
 	
 	public String comp(String command) throws Exception {
 		//returns the comp menmonic
-		Code.comp(command);
-		return null;
+		return code.comp(command);
 	}
 	
 	public String jump(String command) {
 		//returns jump menmonic
-		Code.jump(command);
-		return null;
+		return code.jump(command);
 	}
 	
 	public String intToBinary(int num) {
