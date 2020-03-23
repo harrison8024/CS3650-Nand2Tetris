@@ -7,7 +7,7 @@ public class Assembler {
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		String fileName = args[2];
+		String fileName = args[0];
 		Parser ps = new Parser(fileName);
 
 		ps.firstRound();

@@ -38,14 +38,16 @@ public class Parser {
 	
 	public String advance(boolean isFirst) throws Exception {
 		// reads next command
-		current++;
 		String currentCommand;
 		char type;
 		String output = "";
 		while (hasMoreCommands()) {
 			currentCommand = instructions.get(current).trim();
-			
-			currentCommand.replaceFirst("/(//).+/", "").trim();
+			currentCommand = currentCommand.replaceAll("\\/\\/.*", "").trim();
+			if(currentCommand.isEmpty()) {
+				current++;
+				continue;
+			}
 			type = commandType(currentCommand);
 			
 			// isFirst will only add entry
@@ -87,6 +89,7 @@ public class Parser {
 					}
 					
 			}
+			current++;
 		}
 		return output;
 	}
