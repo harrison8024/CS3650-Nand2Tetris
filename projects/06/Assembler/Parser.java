@@ -1,47 +1,153 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class Parser {
-	private int A_COMMAND = 0;
-	private int C_COMMAND = 1;
-	private int L_COMMAND = 2;
+	public final ArrayList<String> instructions = new ArrayList<String>();
+	public SymbolTable table;
+	public int current = 0;
+	public int pc = -1;
 	
-	
-	public Parser(String[] commands) {
-
+	public Parser(String fileName) {
+		String filePath = "../" + fileName + ".asm";
+		String temp;
+		try(BufferedReader br =  new BufferedReader(new FileReader(filePath))){
+			while((temp = br.readLine()) != null) {
+				instructions.add(temp);
+			}	
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		table = new SymbolTable();
 	}
 	
-	public Boolean hasMoreCommnads() {
+	public void firstRound() throws Exception {
+		advance(true);
+	}
+	
+	public String secondRound() throws Exception {
+		return advance(false);
+	}
+	
+	public Boolean hasMoreCommands() {
 		//Check if there is another command
-		return null;
+		return current < instructions.size();
 	}
 	
-	public void advance() {
+	public String advance(boolean isFirst) throws Exception {
 		// reads next command
-		return;
+		current++;
+		String currentCommand;
+		char type;
+		String output = "";
+		while (hasMoreCommands()) {
+			currentCommand = instructions.get(current).trim();
+			
+			currentCommand.replaceFirst("/(//).+/", "").trim();
+			type = commandType(currentCommand);
+			
+			// isFirst will only add entry
+			switch(type) {
+				case 'A':
+					if(!isFirst) {
+						String newSymbol = symbol(currentCommand, type);
+						String binary = "";
+						if(!isNumeric(newSymbol)) {
+							if(table.contains(newSymbol)) {
+								binary = intToBinary(table.getAddress(newSymbol));
+							} else {
+								binary = intToBinary(table.ramAddress);
+								table.addEntry(binary, table.ramAddress++);
+							}
+						} else {
+							binary = intToBinary(Integer.parseInt(newSymbol));
+						}
+						output += binary + "\r\n";
+					} else {
+						pc++;
+					}
+					break;
+				case 'L':
+					if(isFirst) {
+						String newSymbol = symbol(currentCommand, type);
+						table.addEntry(newSymbol, pc+1);
+					}
+					break;
+				case 'C':
+					if(!isFirst) {
+						String d = dest(currentCommand);
+						String c = comp(currentCommand);
+						String j = jump(currentCommand);
+						output += "111" + c + d + j + "\r\n";
+
+					} else {
+						pc++;
+					}
+					
+			}
+		}
+		return output;
 	}
 	
-	public int commandType() {
+	public char commandType(String instruction) {
 		// returns the current command type
-		return 0;
+		if(instruction.charAt(0) == '@') {
+			return 'A';
+		} else if(instruction.charAt(0) == '(') {
+			return 'L';
+		} else {
+			return 'C';
+		}
 	}
 	
-	public String symbol() {
+	public String symbol(String instruction, char type) {
 		//returns the symbol or decimal
-		return null;
+		if(type == 'A') {
+			return instruction.substring(1);
+		} else if(type == 'L') {
+			return instruction.replaceFirst("/^\\((.+)\\)$/" , "$1");
+		}
+		return "";
 	}
 	
-	public String dest() {
+	public String dest(String command) {
 		// returns the dest mnemonic
+		Code.dest(command);
 		return null;
 	}
 	
-	public String comp() {
+	public String comp(String command) throws Exception {
 		//returns the comp menmonic
+		Code.comp(command);
 		return null;
 	}
 	
-	public String jump() {
+	public String jump(String command) {
 		//returns jump menmonic
+		Code.jump(command);
 		return null;
+	}
+	
+	public String intToBinary(int num) {
+		String str = Integer.toString(num, 2);
+		while(str.length() != 16) {
+			str = "0" + str;
+		}
+		return str;
+	}
+	
+	public boolean isNumeric(String strNum) {
+	    if (strNum == null) {
+	        return false;
+	    }
+	    try {
+	        Integer.parseInt(strNum);
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
+	    return true;
 	}
 }
 

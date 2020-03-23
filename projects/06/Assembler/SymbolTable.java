@@ -2,6 +2,7 @@ import java.util.Hashtable;
 
 public class SymbolTable {
 	public Hashtable<String, Integer> table;
+	public int ramAddress = 16;
 	public SymbolTable() {
 		table = new Hashtable<String, Integer>();
 		table.put("SP", 0);

@@ -3,8 +3,8 @@ import java.lang.StringBuilder;
 
 public class Code {
 	
-	private Hashtable<String, String> jumpSet;
-	private Hashtable<String, String> compSet;
+	public static Hashtable<String, String> jumpSet;
+	public static Hashtable<String, String> compSet;
 	
 	public Code() {
 		jumpSet = new Hashtable<String, String>();
@@ -51,7 +51,7 @@ public class Code {
 		
 	}
 	
-	public String dest(String mnemonic) {
+	public static String dest(String mnemonic) {
 		//returns the binary code of dest
 		if(mnemonic.contains("=")) {
 			String dest = mnemonic.split("=")[0].trim();
@@ -75,7 +75,7 @@ public class Code {
 		return "000";
 	}
 	
-	public String comp(String mnemonic) throws Exception {
+	public static String comp(String mnemonic) throws Exception {
 		//returns the binary code of comp
 		String comp = mnemonic;
 		if(comp.contains("=")) {
@@ -96,7 +96,7 @@ public class Code {
 		throw new Exception("Illegal instruction");
 	}
 	
-	public String jump(String mnemonic) {
+	public static String jump(String mnemonic) {
 		//returns the binary code of jump
 		if(mnemonic.contains(";")) {
 			String jump = mnemonic.split(";")[1].trim();
