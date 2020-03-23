@@ -92,7 +92,6 @@ public class Parser {
 					
 			}
 			current++;
-			System.out.println("output:" + output);
 		}
 		return output;
 	}
