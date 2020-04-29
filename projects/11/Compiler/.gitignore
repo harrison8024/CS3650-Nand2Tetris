@@ -1,0 +1,14 @@
+/JackAnalyzer.class
+/JackTokenizer.class
+/ompilationEngine.class
+/CompilationEngine.class
+/Symbol.class
+/Symbol$KIND.class
+/SymbolTable.class
+/JackCompiler.class
+/VMWriter.class
+/VMWriter$COMMAND.class
+/VMWriter$SEGMENT.class
+/JackComplier.class
+/JackTokenizer$KEYWORD.class
+/JackTokenizer$TYPE.class
